@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-grotesk: 'Space Grotesk', var(--font-inter), system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+    --violet: #8b5cf6;
+    --pink: #ec4899;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #06060d;
+    color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    /* Ambient tech grid + deep neon vignette behind everything */
+    background-image:
+      radial-gradient(ellipse 80% 60% at 15% 0%, rgba(139, 92, 246, 0.10), transparent 60%),
+      radial-gradient(ellipse 70% 60% at 100% 100%, rgba(236, 72, 153, 0.08), transparent 60%),
+      linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 44px 44px, 44px 44px;
+    background-position: center top;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-grotesk), var(--font-inter), sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  .glass-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.875rem;
+  }
+
+  /* HUD-style section label — monospace tech chip with pulsing glow */
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.3rem 0.85rem;
+    border-radius: 0.4rem;
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    background-color: rgba(236, 72, 153, 0.07);
+    color: #f9a8d4;
+    font-family: var(--font-mono), monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    box-shadow: 0 0 18px rgba(236, 72, 153, 0.12), inset 0 0 12px rgba(236, 72, 153, 0.05);
+  }
+
+  .section-label::before {
+    content: '//';
+    color: rgba(236, 72, 153, 0.7);
+    font-weight: 700;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-violet-300 via-pink-400 to-violet-300 bg-clip-text text-transparent;
+  }
+
+  /* Animated shimmering gradient text with neon bloom */
+  .text-shimmer {
+    background: linear-gradient(
+      100deg,
+      #fff 18%,
+      #a78bfa 38%,
+      #ec4899 52%,
+      #f9a8d4 60%,
+      #fff 80%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 5s linear infinite;
+    filter: drop-shadow(0 0 24px rgba(236, 72, 153, 0.45));
+  }
+
+  .btn-primary {
+    @apply relative px-6 py-3 rounded-lg bg-violet-500 text-white font-semibold text-sm
+           hover:bg-violet-400 transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 rounded-lg border border-pink-400/25 text-white/75 font-medium text-sm
+           font-mono tracking-wide
+           hover:border-pink-400/50 hover:text-white hover:bg-pink-400/[0.04] transition-all duration-200;
+  }
+
+  .glow-violet {
+    box-shadow: 0 0 32px rgba(139, 92, 246, 0.4);
+  }
+
+  .glow-pink {
+    box-shadow: 0 0 32px rgba(236, 72, 153, 0.35);
+  }
+}
+
+@layer utilities {
+  /* Neon text glow — layered for that crazy futuristic bloom */
+  .neon-text {
+    text-shadow:
+      0 0 8px rgba(236, 72, 153, 0.5),
+      0 0 28px rgba(139, 92, 246, 0.45),
+      0 0 60px rgba(236, 72, 153, 0.25);
+  }
+
+  /* Breathing neon glow frame (for the featured plan) — slow, smooth fade */
+  .glow-frame {
+    position: relative;
+    border: 1.5px solid rgba(236, 72, 153, 0.55);
+    animation: frame-pulse 5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+
+  /* Corner-bracket HUD accents for cards */
+  .hud-corners::before,
+  .hud-corners::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    pointer-events: none;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+
+  .hud-corners::before {
+    top: 8px;
+    left: 8px;
+    border-top: 1.5px solid rgba(236, 72, 153, 0.7);
+    border-left: 1.5px solid rgba(236, 72, 153, 0.7);
+  }
+
+  .hud-corners::after {
+    bottom: 8px;
+    right: 8px;
+    border-bottom: 1.5px solid rgba(139, 92, 246, 0.7);
+    border-right: 1.5px solid rgba(139, 92, 246, 0.7);
+  }
+
+  .hud-corners:hover::before,
+  .hud-corners:hover::after {
+    opacity: 1;
+  }
+
+  /* Dense local grid overlay for section backgrounds */
+  .grid-overlay {
+    background-image:
+      linear-gradient(rgba(236, 72, 153, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Neon perspective grid floor — synthwave horizon */
+  .neon-grid-floor {
+    background-image:
+      linear-gradient(rgba(236, 72, 153, 0.35) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 92, 246, 0.35) 1px, transparent 1px);
+    background-size: 44px 44px;
+    transform: perspective(420px) rotateX(68deg);
+    transform-origin: center bottom;
+    animation: grid-pan 6s linear infinite;
+    mask-image: linear-gradient(to top, #000 5%, transparent 80%);
+    -webkit-mask-image: linear-gradient(to top, #000 5%, transparent 80%);
+  }
+
+  /* CRT scanlines overlay */
+  .scanlines {
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.025) 0px,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+}
+
+@keyframes frame-pulse {
+  0%, 100% {
+    border-color: rgba(236, 72, 153, 0.3);
+    box-shadow:
+      0 0 10px rgba(236, 72, 153, 0.14),
+      inset 0 0 10px rgba(139, 92, 246, 0.03);
+  }
+  25% {
+    border-color: rgba(236, 72, 153, 0.6);
+    box-shadow:
+      0 0 24px rgba(236, 72, 153, 0.34),
+      0 0 44px rgba(139, 92, 246, 0.18),
+      inset 0 0 14px rgba(139, 92, 246, 0.07);
+  }
+  50% {
+    border-color: rgba(236, 72, 153, 0.95);
+    box-shadow:
+      0 0 40px rgba(236, 72, 153, 0.55),
+      0 0 74px rgba(139, 92, 246, 0.3),
+      inset 0 0 20px rgba(139, 92, 246, 0.12);
+  }
+  75% {
+    border-color: rgba(236, 72, 153, 0.6);
+    box-shadow:
+      0 0 24px rgba(236, 72, 153, 0.34),
+      0 0 44px rgba(139, 92, 246, 0.18),
+      inset 0 0 14px rgba(139, 92, 246, 0.07);
+  }
+}

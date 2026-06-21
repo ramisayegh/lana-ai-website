@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Start with Lana AI — Checkout</title>
+  <meta name="description" content="Start your Lana AI setup. Tell us about your business and we'll reach out within 24 hours to begin onboarding." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+            display: ['var(--font-grotesk)', 'var(--font-inter)', 'sans-serif'],
+            mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer base {
+      :root {
+        --font-inter: 'Inter', system-ui, sans-serif;
+        --font-grotesk: 'Space Grotesk', var(--font-inter), system-ui, sans-serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+      }
+      html { scroll-behavior: smooth; }
+      body {
+        color: #ffffff;
+        font-family: var(--font-inter);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+      }
+      h1, h2, h3 { font-family: var(--font-grotesk); letter-spacing: -0.02em; }
+    }
+    @layer components {
+      .glass-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.035);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 0.875rem;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#08080f] text-white">
+
+  <!-- Ambient glow -->
+  <div class="pointer-events-none fixed inset-0 overflow-hidden">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-violet-500/[0.05] rounded-full blur-[100px]"></div>
+  </div>
+
+  <!-- Header bar -->
+  <div class="relative border-b border-white/[0.06] px-4 sm:px-6 py-4 flex items-center gap-4 backdrop-blur-xl bg-[#08080f]/80">
+    <a href="index.html" class="flex items-center gap-2 text-white/45 hover:text-white transition-colors text-sm">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>
+      Back
+    </a>
+    <div class="h-4 w-px bg-white/10"></div>
+    <a href="index.html" class="text-lg font-bold">Lana<span class="text-violet-400">.</span>AI</a>
+  </div>
+
+  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 py-16">
+
+    <!-- Success state (hidden until submit) -->
+    <div id="checkout-success" class="hidden text-center py-24">
+      <div class="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center mx-auto mb-6">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+      </div>
+      <h2 class="text-3xl font-bold mb-3">Request received</h2>
+      <p class="text-white/50 text-base mb-2 max-w-sm mx-auto">Thank you. We&rsquo;ll review your request and reach out within 24 hours to discuss your setup.</p>
+      <p class="text-white/25 text-sm mb-10">Check your email for a confirmation.</p>
+      <a href="index.html" class="inline-block px-6 py-3 rounded-full bg-violet-500 text-black font-semibold text-sm hover:bg-violet-400 transition-colors">Back to home</a>
+    </div>
+
+    <!-- Form + sidebar -->
+    <div id="checkout-content" class="grid lg:grid-cols-[1fr_320px] gap-10 items-start">
+      <div>
+        <h1 class="text-3xl font-bold mb-2">Start with Lana AI</h1>
+        <p class="text-white/45 text-sm mb-8">Fill in the details below and we&rsquo;ll reach out to begin your setup.</p>
+
+        <form id="checkout-form" class="space-y-4">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-white/45 mb-1.5">Full Name <span class="text-violet-500">*</span></label>
+              <input type="text" name="fullName" required placeholder="Sarah Hassan" class="w-full bg-white/[0.05] border border-white/[0.09] rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-violet-500/40 focus:bg-white/[0.07] transition-all duration-150" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-white/45 mb-1.5">Company Name</label>
+              <input type="text" name="company" placeholder="My Business" class="w-full bg-white/[0.05] border border-white/[0.09] rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-violet-500/40 focus:bg-white/[0.07] transition-all duration-150" />
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-white/45 mb-1.5">Email <span class="text-violet-500">*</span></label>
+              <input type="email" name="email" required placeholder="you@company.com" class="w-full bg-white/[0.05] border border-white/[0.09] rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-violet-500/40 focus:bg-white/[0.07] transition-all duration-150" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-white/45 mb-1.5">Phone / WhatsApp <span class="text-violet-500">*</span></label>
+              <input type="tel" name="phone" required placeholder="+961 70 000 000" class="w-full bg-white/[0.05] border border-white/[0.09] rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-violet-500/40 focus:bg-white/[0.07] transition-all duration-150" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-white/45 mb-1.5">Website or Instagram</label>
+            <input type="text" name="websiteOrInstagram" placeholder="@yourbusiness or www.yourbusiness.com" class="w-full bg-white/[0.05] border border-white/[0.09] rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-violet-500/40 focus:bg-white/[0.07] transition-all duration-150" />
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-white/45 mb-1.5">Business Type <span class="text-violet-500">*</span></label>
+              <select name="businessType" required class="w-full bg-white/[0.05] border border-white/[0.09] rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-violet-500/40 focus:bg-white/[0.07] transition-all duration-150 appearance-none cursor-pointer">
+                <option value="" style="background:#0e0e1b">Select type</option>
+                <option value="Restaurant / Food & Beverage" style="background:#0e0e1b">Restaurant / Food &amp; Beverage</option>
+                <option value="Retail / E-commerce" style="background:#0e0e1b">Retail / E-commerce</option>
+                <option value="Creative Agency" style="background:#0e0e1b">Creative Agency</option>
+                <option value="Freelancer / Professional" style="background:#0e0e1b">Freelancer / Professional</option>
+                <option value="Real Estate" style="background:#0e0e1b">Real Estate</option>
+                <option value="Healthcare / Wellness" style="background:#0e0e1b">Healthcare / Wellness</option>
+                <option value="Education" style="background:#0e0e1b">Education</option>
+                <option value="Other" style="background:#0e0e1b">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-white/45 mb-1.5">Preferred Messaging Channel <span class="text-violet-500">*</span></label>
+              <select name="channel" required class="w-full bg-white/[0.05] border border-white/[0.09] rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-violet-500/40 focus:bg-white/[0.07] transition-all duration-150 appearance-none cursor-pointer">
+                <option value="" style="background:#0e0e1b">Select channel</option>
+                <option value="WhatsApp" style="background:#0e0e1b">WhatsApp</option>
+                <option value="Instagram DMs" style="background:#0e0e1b">Instagram DMs</option>
+                <option value="Facebook Messenger" style="background:#0e0e1b">Facebook Messenger</option>
+                <option value="Telegram" style="background:#0e0e1b">Telegram</option>
+                <option value="Website Chat" style="background:#0e0e1b">Website Chat</option>
+                <option value="Other / Multiple" style="background:#0e0e1b">Other / Multiple</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-white/45 mb-1.5">Notes or questions</label>
+            <textarea name="notes" rows="4" placeholder="Anything you'd like us to know about your business or communication needs..." class="w-full bg-white/[0.05] border border-white/[0.09] rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-violet-500/40 focus:bg-white/[0.07] transition-all duration-150 resize-none"></textarea>
+          </div>
+
+          <button type="submit" class="w-full py-4 rounded-xl bg-violet-500 text-black font-semibold text-sm hover:bg-violet-400 hover:shadow-[0_0_28px_rgba(139,92,246,0.35)] transition-all duration-200">Submit Request</button>
+
+          <p class="text-white/20 text-xs text-center">We&rsquo;ll contact you within 24 hours to confirm your request and begin onboarding.</p>
+        </form>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:sticky lg:top-8 flex flex-col gap-4">
+        <div class="glass-card p-6">
+          <h3 class="text-xs font-semibold uppercase tracking-widest text-white/30 mb-5">Order Summary</h3>
+          <div class="space-y-4 mb-5">
+            <div class="flex justify-between items-start gap-3">
+              <div>
+                <p class="text-sm font-medium text-white">Lana AI Setup</p>
+                <p class="text-xs text-white/35 mt-0.5">One-time · Configuration &amp; onboarding</p>
+              </div>
+              <span class="text-sm font-semibold text-white shrink-0">$500</span>
+            </div>
+            <div class="flex justify-between items-start gap-3">
+              <div>
+                <p class="text-sm font-medium text-white">Monthly Subscription</p>
+                <p class="text-xs text-white/35 mt-0.5">Billed monthly · Cancel anytime</p>
+              </div>
+              <span class="text-sm font-semibold text-white shrink-0">$250<span class="text-white/35 font-normal">/mo</span></span>
+            </div>
+          </div>
+          <div class="border-t border-white/[0.07] pt-4 flex justify-between items-center">
+            <span class="text-sm text-white/50">Due today</span>
+            <span class="text-2xl font-bold text-violet-400">$500</span>
+          </div>
+          <p class="text-white/25 text-xs mt-2 leading-relaxed">First monthly charge of $250 begins after setup is complete.</p>
+        </div>
+
+        <div class="glass-card p-6 text-center" style="border-style:dashed;border-color:rgba(255,255,255,0.1)">
+          <div class="w-10 h-10 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center mx-auto mb-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" /></svg>
+          </div>
+          <p class="text-white/45 text-sm font-medium mb-1">Payment coming soon</p>
+          <p class="text-white/25 text-xs leading-relaxed">Stripe or another provider will be connected here. An invoice is sent after confirmation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

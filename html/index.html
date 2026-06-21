@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lana AI — Human-Sounding Digital Assistant for Business</title>
+  <meta name="description" content="Lana AI helps businesses reply faster, capture leads, answer questions, and manage client conversations with a warm human-sounding assistant." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+            display: ['var(--font-grotesk)', 'var(--font-inter)', 'sans-serif'],
+            mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'grid-pan': 'grid-pan 20s linear infinite',
+            scan: 'scan 8s linear infinite',
+            'float-slow': 'float-slow 6s ease-in-out infinite',
+            shimmer: 'shimmer 3s linear infinite',
+          },
+          keyframes: {
+            'grid-pan': { '0%': { backgroundPosition: '0 0' }, '100%': { backgroundPosition: '40px 40px' } },
+            scan: { '0%': { transform: 'translateY(-100%)' }, '100%': { transform: 'translateY(100vh)' } },
+            'float-slow': { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+          },
+        },
+      },
+    }
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer base {
+      :root {
+        --font-inter: 'Inter', system-ui, sans-serif;
+        --font-grotesk: 'Space Grotesk', var(--font-inter), system-ui, sans-serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+        --violet: #8b5cf6;
+        --pink: #ec4899;
+      }
+      html { scroll-behavior: smooth; }
+      body {
+        background-color: #06060d;
+        color: #ffffff;
+        font-family: var(--font-inter);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+        background-image:
+          radial-gradient(ellipse 80% 60% at 15% 0%, rgba(139, 92, 246, 0.10), transparent 60%),
+          radial-gradient(ellipse 70% 60% at 100% 100%, rgba(236, 72, 153, 0.08), transparent 60%),
+          linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+        background-size: 100% 100%, 100% 100%, 44px 44px, 44px 44px;
+        background-position: center top;
+      }
+      h1, h2, h3 { font-family: var(--font-grotesk); letter-spacing: -0.02em; }
+    }
+
+    @layer components {
+      .glass-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.035);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 0.875rem;
+      }
+      .section-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.3rem 0.85rem;
+        border-radius: 0.4rem;
+        border: 1px solid rgba(236, 72, 153, 0.3);
+        background-color: rgba(236, 72, 153, 0.07);
+        color: #f9a8d4;
+        font-family: var(--font-mono), monospace;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        box-shadow: 0 0 18px rgba(236, 72, 153, 0.12), inset 0 0 12px rgba(236, 72, 153, 0.05);
+      }
+      .section-label::before { content: '//'; color: rgba(236, 72, 153, 0.7); font-weight: 700; }
+      .text-gradient { @apply bg-gradient-to-r from-violet-300 via-pink-400 to-violet-300 bg-clip-text text-transparent; }
+      .text-shimmer {
+        background: linear-gradient(100deg, #fff 18%, #a78bfa 38%, #ec4899 52%, #f9a8d4 60%, #fff 80%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 5s linear infinite;
+        filter: drop-shadow(0 0 24px rgba(236, 72, 153, 0.45));
+      }
+      .btn-primary { @apply relative px-6 py-3 rounded-lg bg-violet-500 text-white font-semibold text-sm hover:bg-violet-400 transition-all duration-200; }
+      .btn-secondary { @apply px-6 py-3 rounded-lg border border-pink-400/25 text-white/75 font-medium text-sm font-mono tracking-wide hover:border-pink-400/50 hover:text-white hover:bg-pink-400/[0.04] transition-all duration-200; }
+      .glow-violet { box-shadow: 0 0 32px rgba(139, 92, 246, 0.4); }
+      .glow-pink { box-shadow: 0 0 32px rgba(236, 72, 153, 0.35); }
+    }
+
+    @layer utilities {
+      .neon-text {
+        text-shadow: 0 0 8px rgba(236, 72, 153, 0.5), 0 0 28px rgba(139, 92, 246, 0.45), 0 0 60px rgba(236, 72, 153, 0.25);
+      }
+      .glow-frame {
+        position: relative;
+        border: 1.5px solid rgba(236, 72, 153, 0.55);
+        animation: frame-pulse 5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+      }
+      .hud-corners::before, .hud-corners::after {
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        pointer-events: none;
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+      }
+      .hud-corners::before { top: 8px; left: 8px; border-top: 1.5px solid rgba(236, 72, 153, 0.7); border-left: 1.5px solid rgba(236, 72, 153, 0.7); }
+      .hud-corners::after { bottom: 8px; right: 8px; border-bottom: 1.5px solid rgba(139, 92, 246, 0.7); border-right: 1.5px solid rgba(139, 92, 246, 0.7); }
+      .hud-corners:hover::before, .hud-corners:hover::after { opacity: 1; }
+      .grid-overlay {
+        background-image:
+          linear-gradient(rgba(236, 72, 153, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+        background-size: 32px 32px;
+      }
+      .neon-grid-floor {
+        background-image:
+          linear-gradient(rgba(236, 72, 153, 0.35) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(139, 92, 246, 0.35) 1px, transparent 1px);
+        background-size: 44px 44px;
+        transform: perspective(420px) rotateX(68deg);
+        transform-origin: center bottom;
+        animation: grid-pan 6s linear infinite;
+        mask-image: linear-gradient(to top, #000 5%, transparent 80%);
+        -webkit-mask-image: linear-gradient(to top, #000 5%, transparent 80%);
+      }
+      .scanlines {
+        background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 0px, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 3px);
+      }
+    }
+
+    @keyframes frame-pulse {
+      0%, 100% { border-color: rgba(236, 72, 153, 0.3); box-shadow: 0 0 10px rgba(236, 72, 153, 0.14), inset 0 0 10px rgba(139, 92, 246, 0.03); }
+      25% { border-color: rgba(236, 72, 153, 0.6); box-shadow: 0 0 24px rgba(236, 72, 153, 0.34), 0 0 44px rgba(139, 92, 246, 0.18), inset 0 0 14px rgba(139, 92, 246, 0.07); }
+      50% { border-color: rgba(236, 72, 153, 0.95); box-shadow: 0 0 40px rgba(236, 72, 153, 0.55), 0 0 74px rgba(139, 92, 246, 0.3), inset 0 0 20px rgba(139, 92, 246, 0.12); }
+      75% { border-color: rgba(236, 72, 153, 0.6); box-shadow: 0 0 24px rgba(236, 72, 153, 0.34), 0 0 44px rgba(139, 92, 246, 0.18), inset 0 0 14px rgba(139, 92, 246, 0.07); }
+    }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    @keyframes grid-pan { 0% { background-position: 0 0; } 100% { background-position: 40px 40px; } }
+  </style>
+</head>
+<body>
+
+  <!-- ================= NAV ================= -->
+  <nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 text-xl font-display font-bold tracking-tight">
+        <span class="relative flex w-2 h-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-60"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-400"></span>
+        </span>
+        Lana<span class="text-violet-400">.</span>AI
+      </a>
+
+      <div class="hidden md:flex items-center gap-7 font-mono text-xs uppercase tracking-widest text-white/55">
+        <a href="#features" class="hover:text-pink-300 transition-colors duration-150">Features</a>
+        <a href="#how-it-works" class="hover:text-pink-300 transition-colors duration-150">How it works</a>
+        <a href="#pricing" class="hover:text-pink-300 transition-colors duration-150">Pricing</a>
+        <a href="#faq" class="hover:text-pink-300 transition-colors duration-150">FAQ</a>
+      </div>
+
+      <div class="hidden md:block">
+        <a href="checkout.html" class="px-5 py-2 rounded-lg bg-violet-500 text-black text-sm font-semibold hover:bg-violet-400 hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all duration-150">Get Lana</a>
+      </div>
+
+      <button id="menu-btn" class="md:hidden text-white/60 hover:text-white transition-colors p-1" aria-label="Toggle menu">
+        <svg id="icon-open" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        <svg id="icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden border-t border-white/5 bg-[#08080f]/95 backdrop-blur-xl px-4 py-5 flex-col gap-4">
+      <a href="#features" class="block text-sm text-white/60 hover:text-white transition-colors py-1">Features</a>
+      <a href="#how-it-works" class="block text-sm text-white/60 hover:text-white transition-colors py-1">How it works</a>
+      <a href="#pricing" class="block text-sm text-white/60 hover:text-white transition-colors py-1">Pricing</a>
+      <a href="#faq" class="block text-sm text-white/60 hover:text-white transition-colors py-1">FAQ</a>
+      <a href="checkout.html" class="mt-1 block px-5 py-2.5 rounded-full bg-violet-500 text-black text-sm font-semibold text-center hover:bg-violet-400 transition-colors">Get Lana</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ================= HERO ================= -->
+    <section class="relative min-h-screen w-full flex items-center overflow-hidden">
+      <div class="absolute inset-0">
+        <img src="hero.jpg" alt="Lana AI — your human-sounding digital assistant" class="w-full h-full object-cover object-[72%_center]" />
+        <div class="absolute inset-0 bg-gradient-to-r from-[#06060d] from-0% via-[#06060d]/80 via-30% to-transparent to-62%"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#06060d] via-transparent to-[#06060d]/40"></div>
+        <div class="absolute inset-0 bg-gradient-to-tr from-violet-900/30 via-transparent to-pink-900/20 mix-blend-screen"></div>
+      </div>
+
+      <div class="pointer-events-none absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -left-40 w-[700px] h-[700px] rounded-full bg-violet-500/[0.14] blur-[130px] animate-pulse-slow"></div>
+        <div class="absolute top-1/3 right-10 w-[500px] h-[500px] rounded-full bg-pink-500/[0.12] blur-[120px]"></div>
+        <div class="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-pink-400/50 to-transparent animate-scan"></div>
+        <div class="scanlines absolute inset-0 opacity-40"></div>
+        <div class="absolute inset-x-0 bottom-0 h-52 overflow-hidden">
+          <div class="neon-grid-floor absolute inset-x-[-25%] bottom-0 h-80"></div>
+        </div>
+      </div>
+
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 pb-20">
+        <div class="max-w-2xl">
+          <div class="section-label mb-7">
+            <span class="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse"></span>
+            AI Assistant · Online 24/7
+          </div>
+
+          <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.02] mb-6">
+            Your business,
+            <br />
+            <span class="text-shimmer">always replying.</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-white/65 leading-relaxed mb-9 max-w-xl">
+            Meet Lana — an AI assistant trained on the soul of your business. She's fast enough
+            that we had to slow her down — so your clients have time to finish their thought before
+            she replies. She reads the full conversation, waits for the silence, then responds once.
+            Concise. Warm. Exactly like a person would.
+          </p>
+
+          <div class="flex flex-wrap gap-3 mb-12">
+            <a href="checkout.html" class="btn-primary hover:shadow-[0_0_28px_rgba(139,92,246,0.4)]">Get Lana for my business</a>
+            <a href="#samples" class="btn-secondary">See how Lana replies</a>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-x-7 gap-y-3 font-mono text-xs text-white/45">
+            <span class="flex items-center gap-2">
+              <span class="relative flex w-2 h-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+              </span>
+              <span class="text-emerald-400">SYSTEM ONLINE</span>
+            </span>
+            <span class="flex items-center gap-2"><span class="text-pink-400">reads context</span> then replies once</span>
+            <span class="flex items-center gap-2"><span class="text-pink-400">∞</span> never sleeps</span>
+            <span class="flex items-center gap-2"><span class="text-pink-400">Leblish</span> + all languages</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/30">
+        <span class="font-mono text-[10px] tracking-[0.3em] uppercase">Scroll</span>
+        <span class="w-px h-8 bg-gradient-to-b from-pink-400/60 to-transparent"></span>
+      </div>
+    </section>
+
+    <!-- ================= PROBLEM ================= -->
+    <section class="relative py-24 overflow-hidden">
+      <div class="pointer-events-none absolute inset-0">
+        <div class="absolute top-1/2 right-0 w-[400px] h-[400px] bg-red-500/[0.04] rounded-full blur-[100px]"></div>
+      </div>
+
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+          <div class="section-label mb-5">The reality</div>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
+            Most businesses lose leads before
+            <br class="hidden sm:block" /> a real conversation even starts.
+          </h2>
+          <p class="text-white/45 text-base sm:text-lg max-w-lg mx-auto">
+            Not from bad service — from slow, inconsistent, or forgotten communication.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="glass-card hud-corners p-6 hover:border-red-400/25 hover:bg-white/[0.05] hover:-translate-y-1 transition-all duration-300">
+            <div class="text-2xl mb-4">⏱</div>
+            <h3 class="font-display font-semibold text-white text-sm mb-2">Slow replies lose leads</h3>
+            <p class="text-white/45 text-xs leading-relaxed">When a potential client reaches out and hears nothing for hours, they move on. Speed is a first impression.</p>
+          </div>
+          <div class="glass-card hud-corners p-6 hover:border-red-400/25 hover:bg-white/[0.05] hover:-translate-y-1 transition-all duration-300">
+            <div class="text-2xl mb-4">🔁</div>
+            <h3 class="font-display font-semibold text-white text-sm mb-2">Repeated questions drain time</h3>
+            <p class="text-white/45 text-xs leading-relaxed">Pricing, availability, services — your team answers the same questions every day while real work waits.</p>
+          </div>
+          <div class="glass-card hud-corners p-6 hover:border-red-400/25 hover:bg-white/[0.05] hover:-translate-y-1 transition-all duration-300">
+            <div class="text-2xl mb-4">📋</div>
+            <h3 class="font-display font-semibold text-white text-sm mb-2">Conversations fall through the cracks</h3>
+            <p class="text-white/45 text-xs leading-relaxed">Without a system, follow-ups are forgotten, leads go cold, and inquiries die in the inbox.</p>
+          </div>
+          <div class="glass-card hud-corners p-6 hover:border-red-400/25 hover:bg-white/[0.05] hover:-translate-y-1 transition-all duration-300">
+            <div class="text-2xl mb-4">🤖</div>
+            <h3 class="font-display font-semibold text-white text-sm mb-2">Generic chatbots feel impersonal</h3>
+            <p class="text-white/45 text-xs leading-relaxed">Standard chatbots insult clients with scripted non-answers. Lana is configured around your business, tone, and workflow.</p>
+          </div>
+        </div>
+
+        <p class="mt-12 text-center text-white/35 text-sm max-w-xl mx-auto">
+          Lana is the answer — an AI assistant trained on your business that works around the clock, sounds human, and never forgets to follow up.
+        </p>
+      </div>
+    </section>
+
+    <!-- ================= FEATURES ================= -->
+    <section id="features" class="py-24 relative overflow-hidden">
+      <div class="pointer-events-none absolute inset-0">
+        <div class="grid-overlay absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-pink-500/[0.04] rounded-full blur-[120px]"></div>
+      </div>
+
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+          <div class="section-label mb-5">What Lana does</div>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-4">Built for real business communication</h2>
+          <p class="text-white/45 text-base sm:text-lg max-w-md mx-auto">Every capability is designed to make your client experience faster, warmer, and more professional.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="glass-card hud-corners p-5 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-sm mb-2">Polished, human replies</h3>
+            <p class="text-white/40 text-xs leading-relaxed">Lana responds with warmth and professionalism — not scripted templates. Clients feel heard.</p>
+          </div>
+          <div class="glass-card hud-corners p-5 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-sm mb-2">Instant FAQ handling</h3>
+            <p class="text-white/40 text-xs leading-relaxed">Services, pricing, availability, process — Lana knows your answers and delivers them instantly.</p>
+          </div>
+          <div class="glass-card hud-corners p-5 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-sm mb-2">Smart lead capture</h3>
+            <p class="text-white/40 text-xs leading-relaxed">Lana asks the right follow-up questions to qualify inquiries before they reach you.</p>
+          </div>
+          <div class="glass-card hud-corners p-5 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-sm mb-2">Lead pre-qualification</h3>
+            <p class="text-white/40 text-xs leading-relaxed">Serious leads get prioritized. Lana surfaces what matters so you invest time in the right clients.</p>
+          </div>
+          <div class="glass-card hud-corners p-5 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="3" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-sm mb-2">Organized conversations</h3>
+            <p class="text-white/40 text-xs leading-relaxed">Every client thread stays clean, professional, and on track. No more buried chats.</p>
+          </div>
+          <div class="glass-card hud-corners p-5 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-sm mb-2">Draft or auto-reply mode</h3>
+            <p class="text-white/40 text-xs leading-relaxed">Lana can draft replies for your review or respond automatically — your choice, based on your workflow.</p>
+          </div>
+          <div class="glass-card hud-corners p-5 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-sm mb-2">Messaging platform ready</h3>
+            <p class="text-white/40 text-xs leading-relaxed">Lana can be configured on all major messaging platforms — wherever your clients already reach you.</p>
+          </div>
+          <div class="glass-card hud-corners p-5 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-sm mb-2">Multilingual support</h3>
+            <p class="text-white/40 text-xs leading-relaxed">Lana replies in any language your clients use — including Leblish, the Arabic-English mix written in Latin letters and numbers that so many clients naturally speak.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HOW IT WORKS ================= -->
+    <section id="how-it-works" class="py-24 relative overflow-hidden">
+      <div class="pointer-events-none absolute inset-0">
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-violet-500/[0.05] rounded-full blur-[100px]"></div>
+      </div>
+
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <div class="section-label mb-5">How it works</div>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-4">Up and running in days, not months</h2>
+          <p class="text-white/45 text-base max-w-md mx-auto">We handle the full setup. You focus on running your business.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+          <div class="absolute top-10 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-pink-400/30 to-transparent hidden lg:block"></div>
+
+          <div class="flex flex-col items-center text-center lg:items-start lg:text-left group">
+            <div class="w-[52px] h-[52px] rounded-xl border border-pink-400/30 bg-pink-400/[0.06] flex items-center justify-center text-pink-300 font-mono font-bold text-sm mb-5 group-hover:border-violet-500/60 group-hover:bg-violet-500/10 group-hover:text-violet-400 group-hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all duration-300 relative z-10">01</div>
+            <h3 class="font-semibold text-white text-base mb-2">We learn your business</h3>
+            <p class="text-white/40 text-sm leading-relaxed">A discovery session to understand your services, clients, tone, goals, and how you currently communicate.</p>
+          </div>
+          <div class="flex flex-col items-center text-center lg:items-start lg:text-left group">
+            <div class="w-[52px] h-[52px] rounded-xl border border-pink-400/30 bg-pink-400/[0.06] flex items-center justify-center text-pink-300 font-mono font-bold text-sm mb-5 group-hover:border-violet-500/60 group-hover:bg-violet-500/10 group-hover:text-violet-400 group-hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all duration-300 relative z-10">02</div>
+            <h3 class="font-semibold text-white text-base mb-2">We train Lana</h3>
+            <p class="text-white/40 text-sm leading-relaxed">Lana is configured with your FAQs, services, pricing, brand tone, and sales flow — everything she needs to represent you.</p>
+          </div>
+          <div class="flex flex-col items-center text-center lg:items-start lg:text-left group">
+            <div class="w-[52px] h-[52px] rounded-xl border border-pink-400/30 bg-pink-400/[0.06] flex items-center justify-center text-pink-300 font-mono font-bold text-sm mb-5 group-hover:border-violet-500/60 group-hover:bg-violet-500/10 group-hover:text-violet-400 group-hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all duration-300 relative z-10">03</div>
+            <h3 class="font-semibold text-white text-base mb-2">We connect your channels</h3>
+            <p class="text-white/40 text-sm leading-relaxed">We deploy Lana across all major messaging platforms — wherever your clients already reach you.</p>
+          </div>
+          <div class="flex flex-col items-center text-center lg:items-start lg:text-left group">
+            <div class="w-[52px] h-[52px] rounded-xl border border-pink-400/30 bg-pink-400/[0.06] flex items-center justify-center text-pink-300 font-mono font-bold text-sm mb-5 group-hover:border-violet-500/60 group-hover:bg-violet-500/10 group-hover:text-violet-400 group-hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all duration-300 relative z-10">04</div>
+            <h3 class="font-semibold text-white text-base mb-2">Lana starts working</h3>
+            <p class="text-white/40 text-sm leading-relaxed">From day one, Lana handles replies, captures leads, answers questions, and keeps your conversations moving 24/7.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MESSAGE SAMPLES ================= -->
+    <section id="samples" class="py-24 relative overflow-hidden">
+      <div class="pointer-events-none absolute inset-0">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-violet-500/[0.04] rounded-full blur-[120px]"></div>
+      </div>
+
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <div class="section-label mb-5">Real conversations</div>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-4">See how Lana actually replies</h2>
+          <p class="text-white/45 text-base max-w-md mx-auto">Three common scenarios — handled instantly, naturally, and on-brand.</p>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-10 lg:gap-16 items-start">
+
+          <!-- Phone 1 -->
+          <div class="flex flex-col items-center gap-5">
+            <div class="relative mx-auto" style="width:260px;border-radius:40px;background:linear-gradient(180deg,#1c1c2a 0%,#141420 100%);border:2px solid rgba(255,255,255,0.1);box-shadow:0 30px 80px rgba(0,0,0,0.65),0 0 0 1px rgba(255,255,255,0.04) inset,0 1px 0 rgba(255,255,255,0.08) inset;padding:10px;">
+              <div class="flex justify-center pt-1 pb-2"><div style="width:90px;height:20px;border-radius:12px;background:#0a0a12;"></div></div>
+              <div style="border-radius:30px;overflow:hidden;background:#0c0c18;border:1px solid rgba(255,255,255,0.05);">
+                <div style="padding:10px 14px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.035);border-bottom:1px solid rgba(255,255,255,0.06);">
+                  <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#000;flex-shrink:0;">L</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2;">Lana AI</div>
+                    <div style="display:flex;align-items:center;gap:4px;margin-top:2px;"><div style="width:6px;height:6px;border-radius:50%;background:#34d399;flex-shrink:0;"></div><span style="font-size:9px;color:#34d399;">online</span></div>
+                  </div>
+                </div>
+                <div style="padding:14px 12px;display:flex;flex-direction:column;justify-content:flex-start;gap:10px;height:300px;overflow:hidden;">
+                  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:3px;">
+                    <div style="max-width:87%;padding:8px 11px;border-radius:14px 14px 14px 4px;font-size:11px;line-height:1.5;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.82);">Honestly not impressed. Messaged yesterday and got zero reply 😤</div>
+                    <span style="font-size:9px;color:rgba(255,255,255,0.22);padding:0 3px;">9:48 AM</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+                    <div style="max-width:87%;padding:8px 11px;border-radius:14px 14px 4px 14px;font-size:11px;line-height:1.5;background:linear-gradient(135deg,#8b5cf6 0%,#a78bfa 100%);color:#000;font-weight:500;">You're completely right to expect faster — I'm sorry you were left waiting. I'm on it now and not going anywhere. Tell me what you need and I'll have it sorted today. 😊</div>
+                    <span style="font-size:9px;color:rgba(255,255,255,0.22);padding:0 3px;">9:48 AM</span>
+                  </div>
+                </div>
+                <div style="padding:10px 12px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.025);border-top:1px solid rgba(255,255,255,0.05);">
+                  <div style="flex:1;height:28px;border-radius:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.07);"></div>
+                  <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#7c3aed);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-center mt-2 pb-1"><div style="width:70px;height:4px;border-radius:2px;background:rgba(255,255,255,0.18);"></div></div>
+            </div>
+            <span class="text-xs font-semibold text-violet-400/70 uppercase tracking-widest">Turning a complaint around</span>
+          </div>
+
+          <!-- Phone 2 -->
+          <div class="flex flex-col items-center gap-5">
+            <div class="relative mx-auto" style="width:260px;border-radius:40px;background:linear-gradient(180deg,#1c1c2a 0%,#141420 100%);border:2px solid rgba(255,255,255,0.1);box-shadow:0 30px 80px rgba(0,0,0,0.65),0 0 0 1px rgba(255,255,255,0.04) inset,0 1px 0 rgba(255,255,255,0.08) inset;padding:10px;">
+              <div class="flex justify-center pt-1 pb-2"><div style="width:90px;height:20px;border-radius:12px;background:#0a0a12;"></div></div>
+              <div style="border-radius:30px;overflow:hidden;background:#0c0c18;border:1px solid rgba(255,255,255,0.05);">
+                <div style="padding:10px 14px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.035);border-bottom:1px solid rgba(255,255,255,0.06);">
+                  <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#000;flex-shrink:0;">L</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2;">Lana AI</div>
+                    <div style="display:flex;align-items:center;gap:4px;margin-top:2px;"><div style="width:6px;height:6px;border-radius:50%;background:#34d399;flex-shrink:0;"></div><span style="font-size:9px;color:#34d399;">online</span></div>
+                  </div>
+                </div>
+                <div style="padding:14px 12px;display:flex;flex-direction:column;justify-content:flex-start;gap:10px;height:300px;overflow:hidden;">
+                  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:3px;">
+                    <div style="max-width:87%;padding:8px 11px;border-radius:14px 14px 14px 4px;font-size:11px;line-height:1.5;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.82);">marhaba! b2addro tsawwerouli el mat3am hal weekend? 😊</div>
+                    <span style="font-size:9px;color:rgba(255,255,255,0.22);padding:0 3px;">7:21 PM</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+                    <div style="max-width:87%;padding:8px 11px;border-radius:14px 14px 4px 14px;font-size:11px;line-height:1.5;background:linear-gradient(135deg,#8b5cf6 0%,#a78bfa 100%);color:#000;font-weight:500;">Marhaba w ahla fik! 😊 Akeed mnerteb shoot hal weekend. Shu no3 el mat3am w kam post badak? Bjehhezlak kel shi w mnkhalleha tetla3 nar 🔥</div>
+                    <span style="font-size:9px;color:rgba(255,255,255,0.22);padding:0 3px;">7:21 PM</span>
+                  </div>
+                </div>
+                <div style="padding:10px 12px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.025);border-top:1px solid rgba(255,255,255,0.05);">
+                  <div style="flex:1;height:28px;border-radius:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.07);"></div>
+                  <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#7c3aed);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-center mt-2 pb-1"><div style="width:70px;height:4px;border-radius:2px;background:rgba(255,255,255,0.18);"></div></div>
+            </div>
+            <span class="text-xs font-semibold text-violet-400/70 uppercase tracking-widest">Charm in Leblish</span>
+          </div>
+
+          <!-- Phone 3 -->
+          <div class="flex flex-col items-center gap-5">
+            <div class="relative mx-auto" style="width:260px;border-radius:40px;background:linear-gradient(180deg,#1c1c2a 0%,#141420 100%);border:2px solid rgba(255,255,255,0.1);box-shadow:0 30px 80px rgba(0,0,0,0.65),0 0 0 1px rgba(255,255,255,0.04) inset,0 1px 0 rgba(255,255,255,0.08) inset;padding:10px;">
+              <div class="flex justify-center pt-1 pb-2"><div style="width:90px;height:20px;border-radius:12px;background:#0a0a12;"></div></div>
+              <div style="border-radius:30px;overflow:hidden;background:#0c0c18;border:1px solid rgba(255,255,255,0.05);">
+                <div style="padding:10px 14px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.035);border-bottom:1px solid rgba(255,255,255,0.06);">
+                  <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#000;flex-shrink:0;">L</div>
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2;">Lana AI</div>
+                    <div style="display:flex;align-items:center;gap:4px;margin-top:2px;"><div style="width:6px;height:6px;border-radius:50%;background:#34d399;flex-shrink:0;"></div><span style="font-size:9px;color:#34d399;">online</span></div>
+                  </div>
+                </div>
+                <div style="padding:14px 12px;display:flex;flex-direction:column;justify-content:flex-start;gap:10px;height:300px;overflow:hidden;">
+                  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:3px;">
+                    <div style="max-width:87%;padding:8px 11px;border-radius:14px 14px 14px 4px;font-size:11px;line-height:1.5;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.82);">Just need a quick logo, nothing fancy.</div>
+                    <span style="font-size:9px;color:rgba(255,255,255,0.22);padding:0 3px;">1:05 PM</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+                    <div style="max-width:87%;padding:8px 11px;border-radius:14px 14px 4px 14px;font-size:11px;line-height:1.5;background:linear-gradient(135deg,#8b5cf6 0%,#a78bfa 100%);color:#000;font-weight:500;">Love a clean, no-fuss logo 😊 One thought — most clients who start here end up wanting matching socials so it all feels like one brand. Want just the logo quote, or shall I add a little bundle option too? Zero pressure.</div>
+                    <span style="font-size:9px;color:rgba(255,255,255,0.22);padding:0 3px;">1:05 PM</span>
+                  </div>
+                </div>
+                <div style="padding:10px 12px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.025);border-top:1px solid rgba(255,255,255,0.05);">
+                  <div style="flex:1;height:28px;border-radius:14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.07);"></div>
+                  <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#7c3aed);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+                  </div>
+                </div>
+              </div>
+              <div class="flex justify-center mt-2 pb-1"><div style="width:70px;height:4px;border-radius:2px;background:rgba(255,255,255,0.18);"></div></div>
+            </div>
+            <span class="text-xs font-semibold text-violet-400/70 uppercase tracking-widest">Knowing when to upsell</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CAPABILITIES ================= -->
+    <section id="capabilities" class="py-24 relative overflow-hidden">
+      <div class="pointer-events-none absolute inset-0">
+        <div class="grid-overlay absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]"></div>
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-violet-500/[0.05] rounded-full blur-[120px]"></div>
+      </div>
+
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+          <div class="section-label mb-5">Beyond messaging</div>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
+            Messages are just the beginning.
+            <br />
+            <span class="text-gradient">She runs your day.</span>
+          </h2>
+          <p class="text-white/45 text-base sm:text-lg max-w-xl mx-auto">
+            Lana isn't only there to reply. She's a full assistant — handling your inbox, your
+            reminders, your files, and your ideas, all in one place.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          <div class="glass-card hud-corners p-6 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-10 5L2 7" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-base mb-2">Reads your inbox</h3>
+            <p class="text-white/40 text-sm leading-relaxed">Lana goes through your emails, flags what actually matters, drafts replies, and keeps your inbox from running your day.</p>
+          </div>
+          <div class="glass-card hud-corners p-6 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-base mb-2">Remembers everything</h3>
+            <p class="text-white/40 text-sm leading-relaxed">From a client follow-up to your daughter's piano lesson, Lana sends the right reminder to the right person at the right time — even nudging your wife so nothing slips.</p>
+          </div>
+          <div class="glass-card hud-corners p-6 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2" /><line x1="12" y1="19" x2="12" y2="23" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-base mb-2">Understands voice notes</h3>
+            <p class="text-white/40 text-sm leading-relaxed">Send her a voice message and she transcribes it, understands what you mean, and acts on it. No typing required.</p>
+          </div>
+          <div class="glass-card hud-corners p-6 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-base mb-2">Works on your computer</h3>
+            <p class="text-white/40 text-sm leading-relaxed">Give Lana access and she handles tasks right on your machine — opening, organizing, and getting real work done for you.</p>
+          </div>
+          <div class="glass-card hud-corners p-6 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="3" y1="15" x2="21" y2="15" /><line x1="9" y1="3" x2="9" y2="21" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-base mb-2">Edits your spreadsheets</h3>
+            <p class="text-white/40 text-sm leading-relaxed">Share a Sheet and Lana fills it in, cleans it up, and updates it for you — like having an analyst on call.</p>
+          </div>
+          <div class="glass-card hud-corners p-6 group hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300 cursor-default">
+            <div class="text-violet-400/70 mb-4 group-hover:text-violet-400 transition-colors duration-200">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="m21 15-5-5L5 21" /></svg>
+            </div>
+            <h3 class="font-semibold text-white text-base mb-2">Generates images</h3>
+            <p class="text-white/40 text-sm leading-relaxed">Need a visual? Lana creates images on the spot — for a post, a mockup, or an idea you can only describe in words.</p>
+          </div>
+        </div>
+
+        <div class="glow-frame relative rounded-[22px]">
+          <div class="rounded-[21px] bg-[#0c0c18] px-8 py-10 sm:px-12 sm:py-12 text-center">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl border border-pink-400/30 bg-pink-400/[0.06] text-pink-300 mb-5 shadow-[0_0_20px_rgba(236,72,153,0.25)]">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3z" /></svg>
+            </div>
+            <h3 class="text-2xl sm:text-3xl font-bold tracking-tight mb-3">
+              And she knows about <span class="text-gradient">everything else.</span>
+            </h3>
+            <p class="text-white/50 text-base leading-relaxed max-w-xl mx-auto">
+              Whatever you need — a question, a task, a decision — just ask. Lana understands the world
+              the way the smartest assistant would. There's genuinely no limit to what she can do.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= WHY LANA ================= -->
+    <section class="py-24 relative overflow-hidden">
+      <div class="pointer-events-none absolute inset-0">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-pink-500/[0.05] rounded-full blur-[100px]"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-violet-500/[0.04] rounded-full blur-[90px]"></div>
+      </div>
+
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <div class="section-label mb-6">Why Lana feels different</div>
+            <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-6">
+              Not a chatbot.
+              <br />
+              <span class="text-gradient">A business-trained assistant.</span>
+            </h2>
+            <p class="text-white/50 text-base leading-relaxed mb-5">Generic chatbots answer questions with scripts. Lana understands your business — your tone, services, client journey, and what matters to your specific audience.</p>
+            <p class="text-white/50 text-base leading-relaxed">She is built to represent you the way you would represent yourself on your best day. Always available. Always professional. Always human-sounding.</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="glass-card hud-corners p-5 hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300">
+              <div class="flex items-center gap-2 mb-2"><div class="w-1.5 h-1.5 rounded-full bg-pink-400 shrink-0 shadow-[0_0_8px_rgba(236,72,153,0.8)]"></div><span class="font-display text-sm font-semibold text-white">Business-trained</span></div>
+              <p class="text-white/40 text-xs leading-relaxed">Configured with your services, tone, FAQs, and sales process — not a generic template.</p>
+            </div>
+            <div class="glass-card hud-corners p-5 hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300">
+              <div class="flex items-center gap-2 mb-2"><div class="w-1.5 h-1.5 rounded-full bg-pink-400 shrink-0 shadow-[0_0_8px_rgba(236,72,153,0.8)]"></div><span class="font-display text-sm font-semibold text-white">Sounds human</span></div>
+              <p class="text-white/40 text-xs leading-relaxed">Clients feel heard. Lana is warm, clear, and natural — never robotic.</p>
+            </div>
+            <div class="glass-card hud-corners p-5 hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300">
+              <div class="flex items-center gap-2 mb-2"><div class="w-1.5 h-1.5 rounded-full bg-pink-400 shrink-0 shadow-[0_0_8px_rgba(236,72,153,0.8)]"></div><span class="font-display text-sm font-semibold text-white">Consistent 24/7</span></div>
+              <p class="text-white/40 text-xs leading-relaxed">Whether it is 2pm or 2am, Lana replies with the same quality and care.</p>
+            </div>
+            <div class="glass-card hud-corners p-5 hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300">
+              <div class="flex items-center gap-2 mb-2"><div class="w-1.5 h-1.5 rounded-full bg-pink-400 shrink-0 shadow-[0_0_8px_rgba(236,72,153,0.8)]"></div><span class="font-display text-sm font-semibold text-white">Tone-adaptive</span></div>
+              <p class="text-white/40 text-xs leading-relaxed">From luxury brands to casual agencies — Lana matches your tone and character exactly.</p>
+            </div>
+            <div class="glass-card hud-corners p-5 hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300">
+              <div class="flex items-center gap-2 mb-2"><div class="w-1.5 h-1.5 rounded-full bg-pink-400 shrink-0 shadow-[0_0_8px_rgba(236,72,153,0.8)]"></div><span class="font-display text-sm font-semibold text-white">Arabic &amp; English</span></div>
+              <p class="text-white/40 text-xs leading-relaxed">Lana speaks any language your clients use, with a genuine feel for Leblish — Arabic typed in Latin letters and numbers the way people actually text.</p>
+            </div>
+            <div class="glass-card hud-corners p-5 hover:border-pink-400/30 hover:bg-white/[0.06] hover:-translate-y-1 transition-all duration-300">
+              <div class="flex items-center gap-2 mb-2"><div class="w-1.5 h-1.5 rounded-full bg-pink-400 shrink-0 shadow-[0_0_8px_rgba(236,72,153,0.8)]"></div><span class="font-display text-sm font-semibold text-white">Keeps evolving</span></div>
+              <p class="text-white/40 text-xs leading-relaxed">As your business grows and changes, Lana updates with it.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PRICING ================= -->
+    <section id="pricing" class="py-24 relative overflow-hidden">
+      <div class="pointer-events-none absolute inset-0">
+        <div class="grid-overlay absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]"></div>
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-violet-500/[0.08] rounded-full blur-[100px]"></div>
+      </div>
+
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+          <div class="section-label mb-5">Pricing</div>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight mb-4">Choose your Lana</h2>
+          <p class="text-white/45 text-base max-w-md mx-auto">One assistant, two tiers. Go all-in with the full cloud personality — or keep it lean and budget-friendly.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6 max-w-4xl mx-auto items-stretch">
+
+          <!-- Lana Lite -->
+          <div class="glass-card hud-corners p-8 sm:p-10 flex flex-col">
+            <div class="inline-flex items-center gap-2 self-start px-3 py-1 rounded-md border border-white/10 bg-white/[0.04] font-mono text-[0.7rem] uppercase tracking-[0.14em] text-white/55 mb-6">
+              <span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>
+              Lana Lite
+            </div>
+            <p class="text-white/50 text-sm mb-6 min-h-[3rem]">Lean, capable, easy on the budget.</p>
+            <div class="mb-1"><span class="text-5xl font-bold text-white">$99</span><span class="text-white/45 text-xl ml-1">/month</span></div>
+            <p class="text-white/40 text-sm font-medium mb-6">+ $150 setup (first month included)</p>
+            <p class="text-white/40 text-xs leading-relaxed mb-7 border-l-2 border-white/10 pl-3">Powered by a lighter language model — fewer tokens, tighter limits, lower cost. She still handles FAQs, captures leads, and replies far better than any chatbot. Just without the full Lana depth.</p>
+
+            <ul class="space-y-3 mb-5">
+              <li class="flex items-start gap-3 text-sm text-white/65"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Instant FAQ &amp; canned replies (standard)</li>
+              <li class="flex items-start gap-3 text-sm text-white/65"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Instant FAQ &amp; canned replies</li>
+              <li class="flex items-start gap-3 text-sm text-white/65"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Basic lead capture</li>
+              <li class="flex items-start gap-3 text-sm text-white/65"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Replies in standard English &amp; Arabic</li>
+              <li class="flex items-start gap-3 text-sm text-white/65"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Light personality tuning</li>
+              <li class="flex items-start gap-3 text-sm text-white/65"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Draft-reply mode</li>
+            </ul>
+
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-start gap-3 text-sm text-white/35"><svg class="shrink-0 mt-0.5 text-white/25" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /></svg>Powered by a smaller language model — lower token limits</li>
+              <li class="flex items-start gap-3 text-sm text-white/35"><svg class="shrink-0 mt-0.5 text-white/25" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /></svg>Lighter character — not as deeply tuned as Lana</li>
+              <li class="flex items-start gap-3 text-sm text-white/35"><svg class="shrink-0 mt-0.5 text-white/25" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /></svg>No Leblish replies<</li>
+              <li class="flex items-start gap-3 text-sm text-white/35"><svg class="shrink-0 mt-0.5 text-white/25" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /></svg>No live learning or ongoing evolution</li>
+            </ul>
+
+            <a href="checkout.html" class="mt-auto block w-full text-center py-3.5 rounded-lg border border-white/15 text-white font-semibold text-sm hover:border-white/35 hover:bg-white/[0.04] transition-all duration-200">Start with Lite</a>
+          </div>
+
+          <!-- Lana (full, featured) -->
+          <div class="glow-frame relative rounded-[22px]">
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-10 px-3 py-1 rounded-full bg-gradient-to-r from-violet-500 to-pink-500 text-white text-[0.7rem] font-mono uppercase tracking-[0.14em] font-semibold shadow-[0_0_20px_rgba(236,72,153,0.5)]">Most popular</div>
+
+            <div class="rounded-[21px] bg-[#0c0c18] p-8 sm:p-10 h-full flex flex-col">
+              <div class="section-label mb-6">
+                <span class="w-1.5 h-1.5 rounded-full bg-pink-400 shadow-[0_0_8px_rgba(236,72,153,0.9)]"></span>
+                Lana
+              </div>
+              <p class="text-white/55 text-sm mb-6 min-h-[3rem]">The full personality. Unmistakably human.</p>
+              <div class="mb-1"><span class="text-5xl sm:text-6xl font-bold text-white neon-text">$250</span><span class="text-white/45 text-xl ml-1">/month</span></div>
+              <p class="text-pink-300 text-sm font-semibold mb-8">+ $500 setup (first month included)</p>
+
+              <ul class="space-y-3 mb-8">
+                <li class="flex items-start gap-3 text-sm text-white/75"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Business discovery &amp; personality tuning</li>
+                <li class="flex items-start gap-3 text-sm text-white/75"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Full character &amp; brand-tone configuration</li>
+                <li class="flex items-start gap-3 text-sm text-white/75"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>All languages — including fluent Leblish</li>
+                <li class="flex items-start gap-3 text-sm text-white/75"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>FAQ, service &amp; sales-flow training</li>
+                <li class="flex items-start gap-3 text-sm text-white/75"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Smart lead capture &amp; pre-qualification</li>
+                <li class="flex items-start gap-3 text-sm text-white/75"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Cloud-hosted, always-on, auto-updating</li>
+                <li class="flex items-start gap-3 text-sm text-white/75"><svg class="shrink-0 mt-0.5 text-violet-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>Ongoing optimization &amp; evolution</li>
+              </ul>
+
+              <a href="checkout.html" class="mt-auto block w-full text-center py-3.5 rounded-lg bg-gradient-to-r from-violet-500 to-pink-500 text-white font-semibold text-sm hover:shadow-[0_0_28px_rgba(236,72,153,0.5)] transition-all duration-200">Start with Lana</a>
+            </div>
+          </div>
+        </div>
+
+        <p class="mt-8 text-center text-white/25 text-xs leading-relaxed max-w-lg mx-auto">Advanced integrations, custom workflows, or heavy automation may require a custom quote. Not sure which fits? We&rsquo;ll help you choose.</p>
+      </div>
+    </section>
+
+    <!-- ================= FAQ ================= -->
+    <section id="faq" class="py-24 relative">
+      <div class="max-w-2xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-12">
+          <div class="section-label mb-5">FAQ</div>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Common questions</h2>
+        </div>
+
+        <div class="space-y-2">
+          <div data-faq class="glass-card overflow-hidden hover:border-white/[0.12] transition-colors duration-200">
+            <button data-faq-btn class="w-full flex items-center justify-between px-6 py-5 text-left gap-4" aria-expanded="false">
+              <span class="text-sm sm:text-base font-medium text-white">Is Lana a chatbot?</span>
+              <svg data-faq-chev class="shrink-0 text-violet-400 transition-transform duration-200" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+            <div data-faq-panel class="hidden px-6 pb-5 pt-1 text-sm text-white/50 leading-relaxed border-t border-white/[0.05]"><div class="pt-3">Lana is an AI digital assistant configured around your business, tone, and workflow. She is designed to feel more human and useful than a generic chatbot.</div></div>
+          </div>
+          <div data-faq class="glass-card overflow-hidden hover:border-white/[0.12] transition-colors duration-200">
+            <button data-faq-btn class="w-full flex items-center justify-between px-6 py-5 text-left gap-4" aria-expanded="false">
+              <span class="text-sm sm:text-base font-medium text-white">Can Lana reply automatically?</span>
+              <svg data-faq-chev class="shrink-0 text-violet-400 transition-transform duration-200" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+            <div data-faq-panel class="hidden px-6 pb-5 pt-1 text-sm text-white/50 leading-relaxed border-t border-white/[0.05]"><div class="pt-3">Yes, depending on the setup. Lana can either draft replies for your approval or reply automatically within defined rules.</div></div>
+          </div>
+          <div data-faq class="glass-card overflow-hidden hover:border-white/[0.12] transition-colors duration-200">
+            <button data-faq-btn class="w-full flex items-center justify-between px-6 py-5 text-left gap-4" aria-expanded="false">
+              <span class="text-sm sm:text-base font-medium text-white">What does the setup fee include?</span>
+              <svg data-faq-chev class="shrink-0 text-violet-400 transition-transform duration-200" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+            <div data-faq-panel class="hidden px-6 pb-5 pt-1 text-sm text-white/50 leading-relaxed border-t border-white/[0.05]"><div class="pt-3">Everything to get Lana live: business onboarding, tone and personality configuration, FAQ and service training, messaging flow setup, the language model subscription, the API tokens she needs to run — and your first month, on us.</div></div>
+          </div>
+          <div data-faq class="glass-card overflow-hidden hover:border-white/[0.12] transition-colors duration-200">
+            <button data-faq-btn class="w-full flex items-center justify-between px-6 py-5 text-left gap-4" aria-expanded="false">
+              <span class="text-sm sm:text-base font-medium text-white">What platforms can Lana support?</span>
+              <svg data-faq-chev class="shrink-0 text-violet-400 transition-transform duration-200" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+            <div data-faq-panel class="hidden px-6 pb-5 pt-1 text-sm text-white/50 leading-relaxed border-t border-white/[0.05]"><div class="pt-3">Lana can be configured on all major messaging platforms — wherever your clients already reach you.</div></div>
+          </div>
+          <div data-faq class="glass-card overflow-hidden hover:border-white/[0.12] transition-colors duration-200">
+            <button data-faq-btn class="w-full flex items-center justify-between px-6 py-5 text-left gap-4" aria-expanded="false">
+              <span class="text-sm sm:text-base font-medium text-white">Can Lana speak Arabic?</span>
+              <svg data-faq-chev class="shrink-0 text-violet-400 transition-transform duration-200" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+            <div data-faq-panel class="hidden px-6 pb-5 pt-1 text-sm text-white/50 leading-relaxed border-t border-white/[0.05]"><div class="pt-3">Lana speaks every language — English, Arabic, French, Spanish, you name it. But what truly sets her apart is Leblish: the Arabic-English mix written in Latin letters and numbers that so many people naturally type. Most AI assistants stumble on it. Lana reads it fluently and replies in kind.</div></div>
+          </div>
+          <div data-faq class="glass-card overflow-hidden hover:border-white/[0.12] transition-colors duration-200">
+            <button data-faq-btn class="w-full flex items-center justify-between px-6 py-5 text-left gap-4" aria-expanded="false">
+              <span class="text-sm sm:text-base font-medium text-white">What's the difference between Lana and Lana Lite?</span>
+              <svg data-faq-chev class="shrink-0 text-violet-400 transition-transform duration-200" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+            <div data-faq-panel class="hidden px-6 pb-5 pt-1 text-sm text-white/50 leading-relaxed border-t border-white/[0.05]"><div class="pt-3">Lana runs on a larger, more capable language model — deeper personality, higher token limits, fluent Leblish, and ongoing learning. Lana Lite is powered by a smaller model with tighter limits: she still handles FAQs, captures leads, and sounds far more human than a standard chatbot — just without the full depth, the Leblish replies, or the ability to keep evolving over time. Both plans include the first month in the setup fee.</div></div>
+          </div>
+          <div data-faq class="glass-card overflow-hidden hover:border-white/[0.12] transition-colors duration-200">
+            <button data-faq-btn class="w-full flex items-center justify-between px-6 py-5 text-left gap-4" aria-expanded="false">
+              <span class="text-sm sm:text-base font-medium text-white">How much does Lana cost?</span>
+              <svg data-faq-chev class="shrink-0 text-violet-400 transition-transform duration-200" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+            <div data-faq-panel class="hidden px-6 pb-5 pt-1 text-sm text-white/50 leading-relaxed border-t border-white/[0.05]"><div class="pt-3">Lana Lite is $99/month with a $150 one-time setup (first month included). The full Lana is $250/month with a $500 one-time setup (first month included). Complex custom automations may need a separate quote.</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= FINAL CTA ================= -->
+    <section class="py-28 relative overflow-hidden">
+      <div class="pointer-events-none absolute inset-0">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-violet-500/[0.08] rounded-full blur-[100px]"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-pink-500/[0.05] rounded-full blur-[80px]"></div>
+      </div>
+
+      <div class="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
+        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
+          Ready to make your business
+          <br />
+          <span class="text-gradient">faster, warmer,</span>
+          <br />
+          and always responsive?
+        </h2>
+        <p class="text-white/45 text-lg mb-10 max-w-xl mx-auto leading-relaxed">Join businesses that trust Lana to represent them every day — professionally, consistently, and on-brand.</p>
+        <a href="checkout.html" class="inline-block px-8 py-4 rounded-lg bg-violet-500 text-black font-bold text-base hover:bg-violet-400 hover:shadow-[0_0_36px_rgba(139,92,246,0.4)] transition-all duration-200">Get Lana AI</a>
+        <p class="mt-6 font-mono text-xs uppercase tracking-widest text-white/30">Deployed for your business · Live in days · Always on</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="border-t border-white/[0.06] pt-14 pb-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid sm:grid-cols-3 gap-10 mb-12">
+        <div>
+          <div class="flex items-center gap-2 text-xl font-display font-bold mb-3">
+            <span class="inline-flex w-2 h-2 rounded-full bg-pink-400"></span>
+            Lana<span class="text-violet-400">.</span>AI
+          </div>
+          <p class="text-white/40 text-sm leading-relaxed">An AI assistant trained on your business —<br />replying instantly, capturing leads, never sleeping.</p>
+          <p class="font-mono text-white/25 text-xs mt-3 uppercase tracking-widest">Human-sounding · Always on</p>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-white/25 mb-4">Navigation</p>
+          <ul class="space-y-2.5 text-sm text-white/45">
+            <li><a href="#features" class="hover:text-white transition-colors duration-150">Features</a></li>
+            <li><a href="#how-it-works" class="hover:text-white transition-colors duration-150">How it works</a></li>
+            <li><a href="#pricing" class="hover:text-white transition-colors duration-150">Pricing</a></li>
+            <li><a href="#faq" class="hover:text-white transition-colors duration-150">FAQ</a></li>
+            <li><a href="checkout.html" class="hover:text-white transition-colors duration-150">Get started</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-white/25 mb-4">Contact</p>
+          <ul class="space-y-2.5 text-sm text-white/45"><li><a href="https://hey-lana.ai" class="hover:text-white transition-colors duration-150">hey-lana.ai</a></li><li><a href="mailto:ask@hey-lana.ai" class="hover:text-white transition-colors duration-150">ask@hey-lana.ai</a></li><li><a href="https://wa.me/971585599609" class="hover:text-white transition-colors duration-150">WhatsApp +971 58 55 99 609</a></li></ul>
+        </div>
+      </div>
+
+      <div class="border-t border-white/[0.06] pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p class="font-mono text-white/20 text-xs">© <span id="year"></span> Lana AI. All rights reserved.</p>
+        <p class="font-mono text-white/15 text-xs">hey-lana.ai</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
