@@ -4,7 +4,7 @@ const litePlan = {
   name: 'Lana Lite',
   tagline: 'Lean, capable, easy on the budget.',
   price: '$99',
-  setup: '+ $150 setup (first month included)',
+  setup: '+ $149 setup (first month included)',
   blurb:
     'Powered by a lighter language model — fewer tokens, tighter limits, lower cost. She still handles FAQs, captures leads, and replies far better than any chatbot. Just without the full Lana depth.',
   features: [
@@ -25,8 +25,8 @@ const litePlan = {
 const fullPlan = {
   name: 'Lana',
   tagline: 'The full personality. Unmistakably human.',
-  price: '$250',
-  setup: '+ $500 setup (first month included)',
+  price: '$249',
+  setup: '+ $499 setup (first month included)',
   features: [
     'Business discovery & full personality tuning',
     'Deep character & brand-tone configuration',
