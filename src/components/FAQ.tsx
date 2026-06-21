@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     q: 'How much does Lana cost?',
-    a: 'Lana Lite is $99/month with a $150 one-time setup (first month included). The full Lana is $250/month with a $500 one-time setup (first month included). Complex custom automations may need a separate quote.',
+    a: 'Lana Lite is $99/month with a $149 one-time setup (first month included). The full Lana is $249/month with a $499 one-time setup (first month included). Complex custom automations may need a separate quote.',
   },
 ]
 

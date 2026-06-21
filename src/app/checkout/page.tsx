@@ -17,7 +17,7 @@ const businessTypes = [
 // USDT direct-payment details (TRON / TRC-20)
 const USDT_ADDRESS = 'TWFL7KTvcbDCEzZE9z71DakChR3DS1n885'
 const USDT_NETWORK = 'TRON (TRC-20)'
-const DUE_TODAY = 500
+const DUE_TODAY = 499
 
 const inputClass =
   'w-full bg-white/[0.05] border border-white/[0.09] rounded-xl px-4 py-3 text-sm text-white placeholder-white/25 focus:outline-none focus:border-violet-500/40 focus:bg-white/[0.07] transition-all duration-150'
@@ -317,7 +317,7 @@ export default function CheckoutPage() {
                         One-time · Configuration &amp; first month included
                       </p>
                     </div>
-                    <span className="text-sm font-semibold text-white shrink-0">$500</span>
+                    <span className="text-sm font-semibold text-white shrink-0">$499</span>
                   </div>
                   <div className="flex justify-between items-start gap-3">
                     <div>
@@ -325,7 +325,7 @@ export default function CheckoutPage() {
                       <p className="text-xs text-white/35 mt-0.5">From month two · Cancel anytime</p>
                     </div>
                     <span className="text-sm font-semibold text-white shrink-0">
-                      $250<span className="text-white/35 font-normal">/mo</span>
+                      $249<span className="text-white/35 font-normal">/mo</span>
                     </span>
                   </div>
                 </div>
@@ -335,7 +335,7 @@ export default function CheckoutPage() {
                   <span className="text-2xl font-bold text-violet-400">${DUE_TODAY}</span>
                 </div>
                 <p className="text-white/25 text-xs mt-2 leading-relaxed">
-                  Includes setup and your first month. $250/mo begins next month.
+                  Includes setup and your first month. $249/mo begins next month.
                 </p>
               </div>
 

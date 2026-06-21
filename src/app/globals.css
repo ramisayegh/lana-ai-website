@@ -70,8 +70,22 @@
     font-weight: 700;
   }
 
+  /* Animated flowing gradient for section titles */
   .text-gradient {
-    @apply bg-gradient-to-r from-violet-300 via-pink-400 to-violet-300 bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      115deg,
+      #c4b5fd 8%,
+      #f9a8d4 28%,
+      #ec4899 48%,
+      #a78bfa 68%,
+      #c4b5fd 92%
+    );
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: gradient-flow 6s ease-in-out infinite;
   }
 
   /* Animated shimmering gradient text with neon bloom */
@@ -190,6 +204,31 @@
       transparent 3px
     );
   }
+}
+
+/* ── Animation keyframes ──
+   Defined directly here (not via Tailwind's theme) so the build never
+   purges them. Tailwind only emits a @keyframes block when its matching
+   animate-* utility is used; these are referenced by raw CSS classes
+   (.text-shimmer, .text-gradient, .neon-grid-floor), so they live here. */
+
+/* Flowing gradient sweep for headline / section titles */
+@keyframes gradient-flow {
+  0%   { background-position: 0% center; }
+  50%  { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+
+/* Diagonal shimmer pass across the hero headline */
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* Synthwave grid floor scrolling toward the viewer */
+@keyframes grid-pan {
+  from { background-position: 0 0; }
+  to   { background-position: 0 44px; }
 }
 
 @keyframes frame-pulse {
