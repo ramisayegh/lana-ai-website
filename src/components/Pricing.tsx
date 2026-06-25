@@ -64,7 +64,7 @@ export default function Pricing() {
             One assistant. Endless capabilities.
           </h2>
           <p className="text-white/45 text-base max-w-md mx-auto">
-            Start with Lana's core messaging intelligence. Unlock more as your business grows.
+            Start with Lana&rsquo;s core messaging intelligence. Unlock more as your business grows.
           </p>
         </div>
 
