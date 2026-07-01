@@ -69,7 +69,15 @@ export default function Footer() {
           <p className="font-mono text-white/20 text-xs">
             © {year} Lana AI. All rights reserved.
           </p>
-          <p className="font-mono text-white/15 text-xs">hey-lana.ai</p>
+          <div className="flex items-center gap-5">
+            <Link href="/terms" className="font-mono text-white/25 text-xs hover:text-white/60 transition-colors duration-150">
+              Terms of Service
+            </Link>
+            <Link href="/privacy" className="font-mono text-white/25 text-xs hover:text-white/60 transition-colors duration-150">
+              Privacy Policy
+            </Link>
+            <p className="font-mono text-white/15 text-xs">hey-lana.ai</p>
+          </div>
         </div>
       </div>
     </footer>
